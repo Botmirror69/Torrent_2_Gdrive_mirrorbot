@@ -1,4 +1,4 @@
-from bot import aria2, download_dict_lock, STOP_DUPLICATE, TORRENT_DIRECT_LIMIT, TAR_UNZIP_LIMIT
+from bot import aria2, download_dict_lock, STOP_DUPLICATE, , TAR_UNZIP_LIMIT
 from bot.helper.mirror_utils.upload_utils.gdriveTools import GoogleDriveHelper
 from bot.helper.ext_utils.bot_utils import *
 from .download_helper import DownloadHelper
@@ -16,7 +16,7 @@ class AriaDownloadHelper(DownloadHelper):
 
     @new_thread
     def __onDownloadStarted(self, api, gid):
-        if STOP_DUPLICATE or TORRENT_DIRECT_LIMIT is not None or TAR_UNZIP_LIMIT is not None:
+        if STOP_DUPLICATE or  is not None or TAR_UNZIP_LIMIT is not None:
             sleep(2)
             dl = getDownloadByGid(gid)
             download = aria2.get_download(gid)
@@ -35,15 +35,15 @@ class AriaDownloadHelper(DownloadHelper):
                     aria2.remove([download], force=True)
                     sendMarkup("Here are the search results:", dl.getListener().bot, dl.getListener().update, button)
                     return
-            if (TORRENT_DIRECT_LIMIT is not None or TAR_UNZIP_LIMIT is not None) and dl is not None:
+            if ( is not None or TAR_UNZIP_LIMIT is not None) and dl is not None:
                 size = aria2.get_download(gid).total_length
                 if dl.getListener().isTar or dl.getListener().extract:
                     is_tar_ext = True
                     mssg = f'Tar/Unzip limit is {TAR_UNZIP_LIMIT}'
                 else:
                     is_tar_ext = False
-                    mssg = f'Torrent/Direct limit is {TORRENT_DIRECT_LIMIT}'
-                result = check_limit(size, TORRENT_DIRECT_LIMIT, TAR_UNZIP_LIMIT, is_tar_ext)
+                    mssg = f'Direct limit is {}'
+                result = check_limit(size, , TAR_UNZIP_LIMIT, is_tar_ext)
                 if result:
                     dl.getListener().onDownloadError(f'{mssg}.\nYour File/Folder size is {get_readable_file_size(size)}')
                     aria2.remove([download], force=True)
@@ -60,11 +60,8 @@ class AriaDownloadHelper(DownloadHelper):
                 dl = getDownloadByGid(new_gid)
             with download_dict_lock:
                 download_dict[dl.uid()] = AriaDownloadStatus(new_gid, dl.getListener())
-                if new_download.is_torrent:
-                    download_dict[dl.uid()].is_torrent = True
-            update_all_messages()
-            LOGGER.info(f'Changed gid from {gid} to {new_gid}')
-        else:
+                
+            
             if dl:
                 threading.Thread(target=dl.getListener().onDownloadComplete).start()
 
@@ -73,7 +70,7 @@ class AriaDownloadHelper(DownloadHelper):
         sleep(4)
         dl = getDownloadByGid(gid)
         if dl: 
-            dl.getListener().onDownloadError('★ 𝗠𝗔𝗚𝗡𝗘𝗧/𝗧𝗢𝗥𝗥𝗘𝗡𝗧 𝗟𝗜𝗡𝗞 𝗜𝗦 𝗗𝗘𝗔𝗗 ❌ ★')
+            dl.getListener().onDownloadError('★ 𝗠𝗔𝗚𝗡𝗘𝗧 𝗟𝗜𝗡𝗞 𝗜𝗦 𝗗𝗘𝗔𝗗 ❌ ★')
 
     @new_thread
     def __onDownloadError(self, api, gid):
