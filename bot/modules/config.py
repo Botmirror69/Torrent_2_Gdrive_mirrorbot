@@ -133,7 +133,7 @@ async def config_button(_, query):
     elif data == '5':
         return await query.message.edit(
             __header__.format(data)
-            + f"**[ Limit Size Config ]**\n\n**TORRENT_DIRECT_LIMIT:** `{TORRENT_DIRECT_LIMIT}`\n\n**TAR_UNZIP_LIMIT:** `{TAR_UNZIP_LIMIT}`\n\n**CLONE_LIMIT:** `{CLONE_LIMIT}`\n\n**MEGA_LIMIT:** `{MEGA_LIMIT}`",
+            + f"**[ Limit Size Config ]**\n\n**:** `{}`\n\n**TAR_UNZIP_LIMIT:** `{TAR_UNZIP_LIMIT}`\n\n**CLONE_LIMIT:** `{CLONE_LIMIT}`\n\n**MEGA_LIMIT:** `{MEGA_LIMIT}`",
             reply_markup=types.InlineKeyboardMarkup(
                 [
                     [
@@ -206,7 +206,7 @@ async def config_button(_, query):
     elif data == '10':
         return await query.message.edit(
             __header__.format(data)
-            + f"**[ qBittorrent Config ]**\n\n**IS_VPS:** `{IS_VPS}`\n\n**SERVER_PORT:** `{SERVER_PORT}`\n\n**BASE_URL_OF_BOT:** `{BASE_URL}`\n\n**[ Updater Config ]**\n\n**UPSTREAM_REPO:** `{UPSTREAM_REPO}`\n\n**UPSTREAM_BRANCH:** `{UPSTREAM_BRANCH}`\n\n**ACCOUNTS_ZIP_URL:** `{ACCOUNTS_ZIP_URL}`\n\n**TOKEN_PICKLE_URL:** `{TOKEN_PICKLE_URL}`",
+            + f"**[  Config ]**\n\n**IS_VPS:** `{IS_VPS}`\n\n**SERVER_PORT:** `{SERVER_PORT}`\n\n**BASE_URL_OF_BOT:** `{BASE_URL}`\n\n**[ Updater Config ]**\n\n**UPSTREAM_REPO:** `{UPSTREAM_REPO}`\n\n**UPSTREAM_BRANCH:** `{UPSTREAM_BRANCH}`\n\n**ACCOUNTS_ZIP_URL:** `{ACCOUNTS_ZIP_URL}`\n\n**TOKEN_PICKLE_URL:** `{TOKEN_PICKLE_URL}`",
             reply_markup=types.InlineKeyboardMarkup(
                 [
                     [
