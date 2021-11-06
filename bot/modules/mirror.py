@@ -9,7 +9,6 @@ from bot.helper.ext_utils.bot_utils import get_mega_link_type, check_limit
 from bot.helper.ext_utils.exceptions import DirectDownloadLinkException, NotSupportedExtractionArchive
 from bot.helper.mirror_utils.download_utils.aria2_download import AriaDownloadHelper
 from bot.helper.mirror_utils.download_utils.mega_downloader import MegaDownloadHelper
-from bot.helper.mirror_utils.download_utils.qbit_downloader import qbittorrent
 from bot.helper.mirror_utils.download_utils.direct_link_generator import direct_link_generator
 from bot.helper.mirror_utils.download_utils.telegram_downloader import TelegramDownloadHelper
 from bot.helper.mirror_utils.status_utils import listeners
@@ -55,7 +54,6 @@ class MirrorListener(listeners.MirrorListeners):
     def clean(self):
         try:
             aria2.purge()
-            get_client().torrents_delete(torrent_hashes="all", delete_files=True)
             Interval[0].cancel()
             del Interval[0]
             delete_all_messages()
@@ -248,7 +246,7 @@ def _mirror(bot, update, isTar=False, extract=False, isZip=False, isQbit=False):
             if bot_utils.is_url(link) and not bot_utils.is_magnet(link):
                 resp = requests.get(link)
                 if resp.status_code == 200:
-                    file_name = str(time.time()).replace(".", "") + ".torrent"
+                    file_name = str(time.time()).replace(".", "") + ""
                     with open(file_name, "wb") as f:
                         f.write(resp.content)
                     link = f"/usr/src/app/{file_name}"
@@ -304,7 +302,7 @@ def _mirror(bot, update, isTar=False, extract=False, isZip=False, isQbit=False):
     if bot_utils.is_url(link) and not bot_utils.is_magnet(link) and not os.path.exists(link) and isQbit:
         resp = requests.get(link)
         if resp.status_code == 200:
-            file_name = str(time.time()).replace(".", "") + ".torrent"
+            file_name = str(time.time()).replace(".", "") + ""
             open(file_name, "wb").write(resp.content)
             link = f"{file_name}"
         else:
@@ -313,7 +311,7 @@ def _mirror(bot, update, isTar=False, extract=False, isZip=False, isQbit=False):
 
         if not bot_utils.is_url(link) and not bot_utils.is_magnet(link) or len(link) == 0:
             if file is not None:
-                if file.mime_type != "application/x-bittorrent":
+                if file.mime_type != "":
                     listener = MirrorListener(bot, update, pswd, isTar, extract, isZip)
                     tg_downloader = TelegramDownloadHelper(listener)
                     ms = update.message
@@ -376,10 +374,7 @@ def _mirror(bot, update, isTar=False, extract=False, isZip=False, isQbit=False):
             mega_dl = MegaDownloadHelper()
             mega_dl.add_download(link, f'{DOWNLOAD_DIR}{listener.uid}/', listener)
 
-    elif isQbit and (bot_utils.is_magnet(link) or os.path.exists(link)):
-        qbit = qbittorrent()
-        qbit.add_torrent(link, f'{DOWNLOAD_DIR}{listener.uid}/', listener, qbitsel)
-
+    
     else:
         ariaDlManager.add_download(link, f'{DOWNLOAD_DIR}{listener.uid}/', listener, name)
         sendStatusMessage(update, bot)
